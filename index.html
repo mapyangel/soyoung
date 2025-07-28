@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>소영이 전용 시계 ⏰</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fff5f8;
+      color: #333;
+      text-align: center;
+      padding-top: 100px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #ff6fa0;
+    }
+    #clock {
+      font-size: 2rem;
+      font-weight: bold;
+      background-color: #ffe4ec;
+      display: inline-block;
+      padding: 20px 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <h1>소영이 전용 시계 💖</h1>
+  <div id="clock">로딩 중...</div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
+      const date = now.getDate();
+      const dayNames = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+      const day = dayNames[now.getDay()];
+      const hour = String(now.getHours()).padStart(2, '0');
+      const minute = String(now.getMinutes()).padStart(2, '0');
+      const second = String(now.getSeconds()).padStart(2, '0');
+
+      const timeString = `${year}년 ${month}월 ${date}일 ${day} ${hour}시 ${minute}분 ${second}초`;
+      document.getElementById('clock').textContent = timeString;
+    }
+
+    setInterval(updateClock, 1000); // 1초마다 갱신
+    updateClock(); // 초기 호출
+  </script>
+</body>
+</html>
