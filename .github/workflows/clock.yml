@@ -1,0 +1,18 @@
+name: update-clock
+on:
+  schedule:
+    - cron: "*/1 * * * *"   # 1분마다
+  workflow_dispatch: {}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: node -e "const fs=require('fs'); const z='Asia/Seoul'; const d=new Date(); const f=new Intl.DateTimeFormat('ko-KR',{timeZone:z, dateStyle:'full', timeStyle:'medium'}).format(d); fs.writeFileSync('now.txt', f+'\n'); fs.writeFileSync('now.json', JSON.stringify({tz:z, iso:d.toISOString(), formatted:f})+'\n');"
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions"; git config user.email "actions@github.com"
+          git add now.txt now.json
+          git commit -m "update time" || echo "no changes"
+          git push
