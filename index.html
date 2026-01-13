@@ -273,6 +273,20 @@
       .card{ height:auto; min-height: 88px; }
       .staff{ grid-template-rows: none; }
     }
+
+    /* 5번 카드 툴팁은 아래로 나오게 */
+.p5 .tip{
+  bottom: auto;
+  top: calc(100% + 10px);
+}
+
+.p5 .tip:after{
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: rgba(12,16,24,.92);
+}
+
   </style>
 </head>
 <body>
@@ -535,3 +549,4 @@ document.getElementById("card2").addEventListener("click", () => {
   </script>
 </body>
 </html>
+
