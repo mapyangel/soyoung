@@ -244,6 +244,14 @@
 
     /* 2번 카드(교차)만 회전되었으니 내부 텍스트는 다시 세워주기 */
     .p2 .card{ transform: rotate(-90deg); }
+// 1번 / 2번 카드 클릭 시 앞뒤 교차 토글
+document.getElementById("card1").addEventListener("click", () => {
+  document.getElementById("cross").classList.toggle("swap12");
+});
+
+document.getElementById("card2").addEventListener("click", () => {
+  document.getElementById("cross").classList.toggle("swap12");
+});
 
     /* 스태프(7~10) */
     .staff .card{ height: 110px; }
@@ -517,6 +525,16 @@
     });
 
     renderEmpty();
+    // 1번 / 2번 카드 클릭 시 앞뒤 교차 토글
+document.getElementById("card1").addEventListener("click", () => {
+  document.getElementById("cross").classList.toggle("swap12");
+});
+
+document.getElementById("card2").addEventListener("click", () => {
+  document.getElementById("cross").classList.toggle("swap12");
+});
+
   </script>
 </body>
 </html>
+
