@@ -1,54 +1,303 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>소영이 전용 시계 ⏰</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>켈틱 크로스 타로 (배열 전용)</title>
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #fff5f8;
-      color: #333;
-      text-align: center;
-      padding-top: 100px;
+    :root{
+      --bg:#0b0f14;
+      --card:#121826;
+      --muted:#9aa4b2;
+      --text:#e6edf3;
+      --accent:#7aa2ff;
+      --line:rgba(255,255,255,.08);
     }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      color: #ff6fa0;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, "Noto Sans KR", sans-serif;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(122,162,255,.12), transparent 60%),
+                  radial-gradient(900px 500px at 80% 20%, rgba(140,255,196,.08), transparent 60%),
+                  var(--bg);
+      color:var(--text);
     }
-    #clock {
-      font-size: 2rem;
-      font-weight: bold;
-      background-color: #ffe4ec;
-      display: inline-block;
-      padding: 20px 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 10px rgba(255, 192, 203, 0.5);
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 56px;
+    }
+    header{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      margin-bottom:16px;
+    }
+    h1{
+      font-size: 20px;
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin-top:6px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height:1.45;
+    }
+    .panel{
+      background: rgba(18,24,38,.72);
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      backdrop-filter: blur(6px);
+    }
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin: 14px 0 18px;
+    }
+    .left{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+    input[type="text"]{
+      width: min(520px, 100%);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      outline:none;
+    }
+    input[type="text"]::placeholder{color:rgba(154,164,178,.7)}
+    .btn{
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(122,162,255,.16);
+      color: var(--text);
+      cursor:pointer;
+      font-weight:600;
+    }
+    .btn:active{transform: translateY(1px)}
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color: var(--muted);
+      font-size: 13px;
+      user-select:none;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:12px;
+      margin-top: 12px;
+    }
+    .card{
+      grid-column: span 6;
+      background: rgba(18,24,38,.55);
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      min-height: 88px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .pos{
+      color: var(--muted);
+      font-size: 12px;
+      line-height:1.35;
+    }
+    .name{
+      font-size: 15px;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .ori{
+      font-size: 12px;
+      color: rgba(230,237,243,.85);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      width:max-content;
+      padding: 6px 10px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(0,0,0,.18);
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: var(--accent);
+      display:inline-block;
+    }
+    .meta{
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .small{
+      opacity:.9;
+    }
+    @media (max-width: 720px){
+      .card{grid-column: span 12;}
+      header{flex-direction:column; gap:10px;}
     }
   </style>
 </head>
 <body>
-  <h1>소영이 전용 시계 💖</h1>
-  <div id="clock">로딩 중...</div>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>켈틱 크로스 타로 (배열 전용)</h1>
+        <div class="sub">
+          해석 없이 <b>10장 배열 + 정/역</b>만 뽑아주는 간단 버전이야. 😊<br>
+          질문을 적고 <b>카드 뽑기</b>를 누르면 돼.
+        </div>
+      </div>
+      <div class="panel" style="min-width:min(380px,100%);">
+        <div class="controls" style="margin:0;">
+          <div class="left" style="width:100%;">
+            <input id="q" type="text" placeholder="질문(선택) — 예: 오늘 내가 집중할 포인트는?" />
+          </div>
+          <div class="left" style="width:100%; justify-content:space-between;">
+            <button class="btn" id="drawBtn">카드 뽑기</button>
+            <label class="toggle">
+              <input id="rev" type="checkbox" checked />
+              역방향 포함
+            </label>
+          </div>
+        </div>
+        <div class="meta">
+          <div class="small" id="stamp">아직 뽑지 않았어.</div>
+          <div class="small" id="seedInfo"></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="panel">
+      <div class="grid" id="grid"></div>
+    </div>
+  </div>
 
   <script>
-    function updateClock() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth() + 1;
-      const date = now.getDate();
-      const dayNames = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
-      const day = dayNames[now.getDay()];
-      const hour = String(now.getHours()).padStart(2, '0');
-      const minute = String(now.getMinutes()).padStart(2, '0');
-      const second = String(now.getSeconds()).padStart(2, '0');
+    // --- Deck (78) ---
+    const MAJOR = [
+      "0 바보","1 마법사","2 여사제","3 여황제","4 황제","5 교황",
+      "6 연인","7 전차","8 힘","9 은둔자","10 운명의 수레바퀴","11 정의",
+      "12 매달린 사람","13 죽음","14 절제","15 악마","16 탑","17 별",
+      "18 달","19 태양","20 심판","21 세계"
+    ];
+    const RANKS = ["에이스","2","3","4","5","6","7","8","9","10","페이지","나이트","퀸","킹"];
+    const SUITS = ["완드","컵","소드","펜타클"];
 
-      const timeString = `${year}년 ${month}월 ${date}일 ${day} ${hour}시 ${minute}분 ${second}초`;
-      document.getElementById('clock').textContent = timeString;
+    function buildDeck(){
+      const deck = [];
+      MAJOR.forEach(x => deck.push(x));
+      for(const s of SUITS){
+        for(const r of RANKS){
+          deck.push(`${s} ${r}`);
+        }
+      }
+      return deck;
     }
 
-    setInterval(updateClock, 1000); // 1초마다 갱신
-    updateClock(); // 초기 호출
+    // --- Celtic Cross positions (10) ---
+    const POS = [
+      "1. 현재(상황의 핵심)",
+      "2. 장애/도전(교차)",
+      "3. 무의식/근원(바탕)",
+      "4. 과거(지나간 영향)",
+      "5. 의식/목표(위)",
+      "6. 가까운 미래(앞)",
+      "7. 나(태도/입장)",
+      "8. 주변/환경(타인/상황)",
+      "9. 희망/두려움",
+      "10. 결과(잠재적 결말)"
+    ];
+
+    // --- RNG helpers (crypto if available) ---
+    function rand(){
+      if (window.crypto && crypto.getRandomValues){
+        const a = new Uint32Array(1);
+        crypto.getRandomValues(a);
+        return a[0] / 4294967296;
+      }
+      return Math.random();
+    }
+
+    function shuffle(arr){
+      for(let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(rand() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function stamp(){
+      const d = new Date();
+      const pad = (n)=> String(n).padStart(2,"0");
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }
+
+    function draw(){
+      const deck = shuffle(buildDeck());
+      const allowReversed = document.getElementById("rev").checked;
+
+      const spread = [];
+      for(let i=0;i<10;i++){
+        const name = deck.pop();
+        const reversed = allowReversed ? (rand() < 0.5) : false;
+        spread.push({
+          pos: POS[i],
+          name,
+          ori: reversed ? "역방향" : "정방향"
+        });
+      }
+      return spread;
+    }
+
+    function render(spread){
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+
+      spread.forEach((c)=>{
+        const el = document.createElement("div");
+        el.className = "card";
+        el.innerHTML = `
+          <div class="pos">${c.pos}</div>
+          <div class="name">${c.name}</div>
+          <div class="ori"><span class="dot"></span>${c.ori}</div>
+        `;
+        grid.appendChild(el);
+      });
+    }
+
+    document.getElementById("drawBtn").addEventListener("click", ()=>{
+      const spread = draw();
+      render(spread);
+
+      const q = document.getElementById("q").value.trim();
+      document.getElementById("stamp").textContent =
+        (q ? `질문: ${q} · ` : "") + `뽑은 시간: ${stamp()}`;
+      document.getElementById("seedInfo").textContent = "※ 채널/시간과 무관하게 랜덤이야 😊";
+    });
+
+    // Initial placeholder
+    render(POS.map((p, i)=>({pos:p, name:"(비어있음)", ori:""})));
+    document.querySelectorAll(".ori").forEach(o=>o.style.display="none");
   </script>
 </body>
 </html>
