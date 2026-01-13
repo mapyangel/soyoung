@@ -3,54 +3,58 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>켈틱 크로스 타로 (배열 전용)</title>
+  <title>켈틱 크로스 타로 (배열 + Hover 설명)</title>
   <style>
     :root{
       --bg:#0b0f14;
-      --card:#121826;
-      --muted:#9aa4b2;
+      --panel:#121826;
+      --card:#101827;
+      --line:rgba(255,255,255,.10);
       --text:#e6edf3;
+      --muted:#9aa4b2;
       --accent:#7aa2ff;
-      --line:rgba(255,255,255,.08);
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, "Noto Sans KR", sans-serif;
-      background: radial-gradient(1200px 600px at 20% 0%, rgba(122,162,255,.12), transparent 60%),
-                  radial-gradient(900px 500px at 80% 20%, rgba(140,255,196,.08), transparent 60%),
-                  var(--bg);
+      background:
+        radial-gradient(1100px 650px at 15% 0%, rgba(122,162,255,.12), transparent 62%),
+        radial-gradient(900px 520px at 85% 20%, rgba(140,255,196,.08), transparent 60%),
+        var(--bg);
       color:var(--text);
     }
     .wrap{
-      max-width: 980px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 24px 16px 56px;
+      padding: 22px 16px 56px;
     }
+
     header{
       display:flex;
-      gap:12px;
+      gap:14px;
       align-items:flex-start;
       justify-content:space-between;
-      margin-bottom:16px;
+      margin-bottom: 16px;
+      flex-wrap:wrap;
     }
-    h1{
-      font-size: 20px;
-      margin:0;
-      letter-spacing:.2px;
-    }
+    h1{margin:0; font-size:20px; letter-spacing:.2px;}
     .sub{
       margin-top:6px;
-      color: var(--muted);
-      font-size: 13px;
+      color:var(--muted);
+      font-size:13px;
       line-height:1.45;
     }
+
     .panel{
       background: rgba(18,24,38,.72);
       border:1px solid var(--line);
       border-radius: 16px;
       padding: 14px;
       backdrop-filter: blur(6px);
+      box-shadow: var(--shadow);
+      width: min(520px, 100%);
     }
     .controls{
       display:flex;
@@ -58,16 +62,17 @@
       gap:10px;
       align-items:center;
       justify-content:space-between;
-      margin: 14px 0 18px;
+      margin: 0;
     }
     .left{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       align-items:center;
+      width:100%;
     }
     input[type="text"]{
-      width: min(520px, 100%);
+      width: 100%;
       padding: 10px 12px;
       border-radius: 12px;
       border: 1px solid var(--line);
@@ -83,7 +88,7 @@
       background: rgba(122,162,255,.16);
       color: var(--text);
       cursor:pointer;
-      font-weight:600;
+      font-weight:700;
     }
     .btn:active{transform: translateY(1px)}
     .toggle{
@@ -93,53 +98,10 @@
       color: var(--muted);
       font-size: 13px;
       user-select:none;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:12px;
-      margin-top: 12px;
-    }
-    .card{
-      grid-column: span 6;
-      background: rgba(18,24,38,.55);
-      border:1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      min-height: 88px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .pos{
-      color: var(--muted);
-      font-size: 12px;
-      line-height:1.35;
-    }
-    .name{
-      font-size: 15px;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-    .ori{
-      font-size: 12px;
-      color: rgba(230,237,243,.85);
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      width:max-content;
-      padding: 6px 10px;
-      border:1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(0,0,0,.18);
-    }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      background: var(--accent);
-      display:inline-block;
+      margin-left:auto;
     }
     .meta{
-      margin-top: 14px;
+      margin-top: 10px;
       color: var(--muted);
       font-size: 12px;
       display:flex;
@@ -148,31 +110,181 @@
       align-items:center;
       justify-content:space-between;
     }
-    .small{
-      opacity:.9;
+
+    /* --- Traditional Celtic Cross Layout --- */
+    .board{
+      margin-top: 12px;
+      background: rgba(18,24,38,.55);
+      border:1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--shadow);
     }
-    @media (max-width: 720px){
-      .card{grid-column: span 12;}
-      header{flex-direction:column; gap:10px;}
+
+    /* 큰 화면: 전통 배치 */
+    .layout{
+      display:grid;
+      gap: 12px;
+      align-items:center;
+      justify-items:center;
+
+      /* 2블록: 왼쪽 크로스 + 오른쪽 스태프 */
+      grid-template-columns: 1fr 0.65fr;
+    }
+
+    .cross{
+      width: min(740px, 100%);
+      aspect-ratio: 16 / 10;
+      position: relative;
+      border: 1px dashed rgba(255,255,255,.06);
+      border-radius: 16px;
+      background: rgba(0,0,0,.10);
+      overflow:hidden;
+    }
+
+    .staff{
+      width: min(280px, 100%);
+      height: 100%;
+      display:grid;
+      grid-template-rows: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .slot{
+      position:absolute;
+      width: 160px;
+      height: 110px;
+      transform: translate(-50%, -50%);
+    }
+
+    /* 전통 켈틱 크로스 자리 (대략 비율 위치) */
+    .p1{ left: 50%; top: 50%; }               /* 1 중심 */
+    .p2{ left: 50%; top: 50%; transform: translate(-50%,-50%) rotate(90deg); } /* 2 교차(가로) */
+    .p3{ left: 50%; top: 82%; }               /* 3 아래 */
+    .p4{ left: 20%; top: 50%; }               /* 4 왼쪽 */
+    .p5{ left: 50%; top: 18%; }               /* 5 위 */
+    .p6{ left: 80%; top: 50%; }               /* 6 오른쪽 */
+
+    /* 카드 UI */
+    .card{
+      width: 100%;
+      height: 100%;
+      background: rgba(16,24,39,.62);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 10px 10px 9px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      justify-content:center;
+      position: relative;
+    }
+    .pos{
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height:1.25;
+    }
+    .name{
+      font-size: 14px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .ori{
+      font-size: 11.5px;
+      color: rgba(230,237,243,.88);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      width:max-content;
+      padding: 5px 9px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(0,0,0,.18);
+      margin-top: 2px;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: var(--accent);
+      display:inline-block;
+    }
+
+    /* Hover tooltip */
+    .tip{
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 10px);
+      transform: translateX(-50%);
+      width: 260px;
+      padding: 10px 11px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(12,16,24,.92);
+      color: rgba(230,237,243,.95);
+      box-shadow: 0 18px 40px rgba(0,0,0,.5);
+      display:none;
+      z-index: 50;
+      pointer-events:none;
+    }
+    .tip:after{
+      content:"";
+      position:absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 8px solid transparent;
+      border-top-color: rgba(12,16,24,.92);
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.4));
+    }
+    .tip .t1{font-weight:800; font-size:12.5px; margin-bottom:6px; color: rgba(230,237,243,.98);}
+    .tip .t2{font-size:12px; line-height:1.45; color: rgba(230,237,243,.88);}
+    .card:hover .tip,
+    .card:focus-within .tip{
+      display:block;
+    }
+
+    /* 2번 카드(교차)만 회전되었으니 내부 텍스트는 다시 세워주기 */
+    .p2 .card{ transform: rotate(-90deg); }
+
+    /* 스태프(7~10) */
+    .staff .card{ height: 110px; }
+    .staff .card{ position: relative; }
+
+    /* 모바일: 보기 좋게 리스트로 */
+    @media (max-width: 880px){
+      .layout{ grid-template-columns: 1fr; }
+      .cross{ aspect-ratio: auto; position: static; padding: 10px; }
+      .slot{ position: static; transform:none; width: 100%; height: auto; }
+      .p2{ transform:none; }
+      .p2 .card{ transform:none; }
+      .cross{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        border: 0;
+        background: transparent;
+        padding: 0;
+      }
+      .card{ height:auto; min-height: 88px; }
+      .staff{ grid-template-rows: none; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div>
-        <h1>켈틱 크로스 타로 (배열 전용)</h1>
+      <div style="min-width:260px;">
+        <h1>켈틱 크로스 타로 (배열 + Hover 설명)</h1>
         <div class="sub">
-          해석 없이 <b>10장 배열 + 정/역</b>만 뽑아주는 간단 버전이야. 😊<br>
-          질문을 적고 <b>카드 뽑기</b>를 누르면 돼.
+          전통 켈틱 크로스 배치로 보여줘. 카드 위에 마우스 올리면 <b>2~3줄 설명</b>이 떠 😊
         </div>
       </div>
-      <div class="panel" style="min-width:min(380px,100%);">
-        <div class="controls" style="margin:0;">
-          <div class="left" style="width:100%;">
+
+      <div class="panel">
+        <div class="controls">
+          <div class="left">
             <input id="q" type="text" placeholder="질문(선택) — 예: 오늘 내가 집중할 포인트는?" />
           </div>
-          <div class="left" style="width:100%; justify-content:space-between;">
+          <div class="left" style="justify-content:space-between;">
             <button class="btn" id="drawBtn">카드 뽑기</button>
             <label class="toggle">
               <input id="rev" type="checkbox" checked />
@@ -181,14 +293,32 @@
           </div>
         </div>
         <div class="meta">
-          <div class="small" id="stamp">아직 뽑지 않았어.</div>
-          <div class="small" id="seedInfo"></div>
+          <div id="stamp">아직 뽑지 않았어.</div>
+          <div id="note">※ 랜덤이야 😊</div>
         </div>
       </div>
     </header>
 
-    <div class="panel">
-      <div class="grid" id="grid"></div>
+    <div class="board">
+      <div class="layout">
+        <!-- LEFT: Cross -->
+        <div class="cross" id="cross">
+          <div class="slot p5"><div class="card" id="card5" tabindex="0"></div></div>
+          <div class="slot p4"><div class="card" id="card4" tabindex="0"></div></div>
+          <div class="slot p1"><div class="card" id="card1" tabindex="0"></div></div>
+          <div class="slot p2"><div class="card" id="card2" tabindex="0"></div></div>
+          <div class="slot p6"><div class="card" id="card6" tabindex="0"></div></div>
+          <div class="slot p3"><div class="card" id="card3" tabindex="0"></div></div>
+        </div>
+
+        <!-- RIGHT: Staff (7~10) -->
+        <div class="staff" id="staff">
+          <div class="card" id="card10" tabindex="0"></div>
+          <div class="card" id="card9" tabindex="0"></div>
+          <div class="card" id="card8" tabindex="0"></div>
+          <div class="card" id="card7" tabindex="0"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -214,19 +344,19 @@
       return deck;
     }
 
-    // --- Celtic Cross positions (10) ---
-    const POS = [
-      "1. 현재(상황의 핵심)",
-      "2. 장애/도전(교차)",
-      "3. 무의식/근원(바탕)",
-      "4. 과거(지나간 영향)",
-      "5. 의식/목표(위)",
-      "6. 가까운 미래(앞)",
-      "7. 나(태도/입장)",
-      "8. 주변/환경(타인/상황)",
-      "9. 희망/두려움",
-      "10. 결과(잠재적 결말)"
-    ];
+    // --- Celtic Cross positions (1~10) ---
+    const POS = {
+      1: "1. 현재(상황의 핵심)",
+      2: "2. 장애/도전(교차)",
+      3: "3. 무의식/근원(바탕)",
+      4: "4. 과거(지나간 영향)",
+      5: "5. 의식/목표(위)",
+      6: "6. 가까운 미래(앞)",
+      7: "7. 나(태도/입장)",
+      8: "8. 주변/환경(타인/상황)",
+      9: "9. 희망/두려움",
+      10:"10. 결과(잠재적 결말)"
+    };
 
     // --- RNG helpers (crypto if available) ---
     function rand(){
@@ -237,7 +367,6 @@
       }
       return Math.random();
     }
-
     function shuffle(arr){
       for(let i = arr.length - 1; i > 0; i--){
         const j = Math.floor(rand() * (i + 1));
@@ -245,59 +374,149 @@
       }
       return arr;
     }
-
     function stamp(){
       const d = new Date();
       const pad = (n)=> String(n).padStart(2,"0");
       return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
     }
 
+    // --- Meaning generator (2~3 lines) ---
+    // 메이저는 간단한 3줄 고정, 마이너는 슈트+랭크 조합으로 2~3줄 생성
+    const MAJOR_MEAN = {
+      "0 바보": ["새 출발, 가벼운 용기.", "계획보다 경험이 앞서는 흐름.", "한 걸음은 ‘모험’이 될 수 있어."],
+      "1 마법사": ["의지와 실행력.", "손에 쥔 자원으로 시작하기.", "말/선택이 현실을 만든다."],
+      "2 여사제": ["직감, 숨은 정보.", "지금은 관찰이 힘이 돼.", "조용한 확신을 믿어."],
+      "3 여황제": ["풍요, 돌봄, 창조.", "안정과 성장의 기운.", "받아들이고 키우는 시간."],
+      "4 황제": ["구조, 책임, 통제.", "경계와 규칙이 필요해.", "기반을 다지면 흔들림이 줄어."],
+      "5 교황": ["전통, 조언, 가치.", "원칙을 확인하는 자리.", "배움/가르침이 길을 연다."],
+      "6 연인": ["관계/선택의 카드.", "마음과 가치의 정렬.", "‘무엇을 택할지’가 핵심."],
+      "7 전차": ["전진, 승부, 추진.", "집중하면 길이 열린다.", "방향만 잃지 마."],
+      "8 힘": ["부드러운 강함.", "참을성/자기조절.", "설득은 힘보다 깊다."],
+      "9 은둔자": ["내면 탐색, 정리.", "혼자 생각할 시간이 필요.", "답은 조용한 곳에 있다."],
+      "10 운명의 수레바퀴": ["전환점, 타이밍.", "흐름이 바뀌는 순간.", "잡을 건 잡고 놓을 건 놓기."],
+      "11 정의": ["균형, 판단, 정리.", "공정함이 기준이 돼.", "원인과 결과를 마주하기."],
+      "12 매달린 사람": ["잠시 멈춤, 관점 전환.", "서두르지 않아도 돼.", "다르게 보면 해답이 보여."],
+      "13 죽음": ["끝과 시작.", "정리/청산의 힘.", "낡은 것을 놓아야 새로 온다."],
+      "14 절제": ["조율, 절충, 회복.", "극단보다 중간.", "천천히 섞어서 균형 잡기."],
+      "15 악마": ["집착, 유혹, 매듭.", "스스로 묶인 끈을 보기.", "욕망을 ‘관리’하는 게 핵심."],
+      "16 탑": ["급변, 붕괴, 각성.", "기존 틀이 흔들릴 수 있어.", "무너진 자리에 새 설계가 온다."],
+      "17 별": ["희망, 방향, 회복.", "멀리 봐도 괜찮아.", "작은 빛이 길을 만든다."],
+      "18 달": ["불안, 착각, 무의식.", "확신 전에 확인이 필요.", "감정의 그림자를 다루기."],
+      "19 태양": ["명확함, 활력, 성공.", "드러나면 쉬워져.", "즐거움이 에너지가 된다."],
+      "20 심판": ["부름, 결단, 재평가.", "정리하고 새로 선언하기.", "과거를 통과해 앞으로."],
+      "21 세계": ["완성, 통합, 마무리.", "사이클의 결론.", "정리되면 다음 단계가 열린다."]
+    };
+
+    const SUIT_MEAN = {
+      "완드": ["열정/의지", "시작·추진", "에너지의 방향"],
+      "컵": ["감정/관계", "공감·교류", "마음의 흐름"],
+      "소드": ["생각/판단", "정보·소통", "결정과 진실"],
+      "펜타클": ["현실/자원", "돈·일·몸", "기반과 꾸준함"]
+    };
+
+    const RANK_MEAN = {
+      "에이스": ["씨앗이 생긴다", "첫 불꽃", "출발점"],
+      "2": ["균형·선택", "양면", "조율 필요"],
+      "3": ["확장", "협업/연결", "첫 결과"],
+      "4": ["고정/안정", "유지", "멈춤도 선택"],
+      "5": ["갈등/흔들림", "시험", "재정렬 필요"],
+      "6": ["회복/진전", "도움", "흐름이 좋아짐"],
+      "7": ["점검/방어", "고집", "중간평가"],
+      "8": ["속도/집중", "반복·숙련", "진도 나감"],
+      "9": ["성취/단독", "충분함", "마무리 직전"],
+      "10": ["완성/과부하", "끝의 무게", "정리의 필요"],
+      "페이지": ["소식/호기심", "학습", "초기 단계"],
+      "나이트": ["돌파/이동", "행동", "속도 조절"],
+      "퀸": ["내면의 숙성", "보살핌", "감정·지혜"],
+      "킹": ["통제/책임", "결정권", "성과 관리"]
+    };
+
+    function meaningLines(cardName, ori){
+      // Major
+      if (MAJOR_MEAN[cardName]){
+        const lines = MAJOR_MEAN[cardName].slice();
+        if (ori === "역방향") {
+          // 역방향은 “지연/내면화/과잉” 느낌만 살짝 덧붙임
+          lines[1] = "흐름이 지연되거나 내면에서 작동해.";
+          lines[2] = "과하거나 막힌 부분을 조용히 정리해봐.";
+        }
+        return lines.slice(0,3);
+      }
+
+      // Minor: "슈트 랭크"
+      const parts = cardName.split(" ");
+      if (parts.length >= 2){
+        const suit = parts[0];
+        const rank = parts[1];
+        const s = SUIT_MEAN[suit];
+        const r = RANK_MEAN[rank];
+        if (s && r){
+          const base1 = `${suit}는 ${s[0]}의 영역이야.`;
+          const base2 = `${rank}는 ${r[0]} / ${r[1]}의 결을 가져.`;
+          const base3 = (ori === "정방향")
+            ? `지금은 ${s[2]}을(를) ${r[2]} 쪽으로 써보면 좋아.`
+            : `역방향이라면 ${r[2]}이(가) 막히거나 과해질 수 있어.`;
+          return [base1, base2, base3];
+        }
+      }
+
+      return ["해석 데이터 준비중이야.", "그래도 배열 자체로 의미를 느껴봐.", "필요하면 소영이가 더 채워줄게 😊"];
+    }
+
     function draw(){
       const deck = shuffle(buildDeck());
       const allowReversed = document.getElementById("rev").checked;
 
-      const spread = [];
-      for(let i=0;i<10;i++){
+      const spread = {};
+      for(let i=1;i<=10;i++){
         const name = deck.pop();
         const reversed = allowReversed ? (rand() < 0.5) : false;
-        spread.push({
+        spread[i] = {
           pos: POS[i],
           name,
           ori: reversed ? "역방향" : "정방향"
-        });
+        };
       }
       return spread;
     }
 
-    function render(spread){
-      const grid = document.getElementById("grid");
-      grid.innerHTML = "";
+    function renderCard(el, data){
+      const lines = meaningLines(data.name, data.ori);
+      el.innerHTML = `
+        <div class="pos">${data.pos}</div>
+        <div class="name">${data.name}</div>
+        <div class="ori"><span class="dot"></span>${data.ori}</div>
 
-      spread.forEach((c)=>{
-        const el = document.createElement("div");
-        el.className = "card";
+        <div class="tip" role="tooltip">
+          <div class="t1">${data.name} · ${data.ori}</div>
+          <div class="t2">• ${lines[0]}<br>• ${lines[1]}<br>• ${lines[2]}</div>
+        </div>
+      `;
+    }
+
+    function renderEmpty(){
+      for(let i=1;i<=10;i++){
+        const el = document.getElementById(`card${i}`);
         el.innerHTML = `
-          <div class="pos">${c.pos}</div>
-          <div class="name">${c.name}</div>
-          <div class="ori"><span class="dot"></span>${c.ori}</div>
+          <div class="pos">${POS[i]}</div>
+          <div class="name">(비어있음)</div>
         `;
-        grid.appendChild(el);
-      });
+      }
     }
 
     document.getElementById("drawBtn").addEventListener("click", ()=>{
       const spread = draw();
-      render(spread);
+      for(let i=1;i<=10;i++){
+        renderCard(document.getElementById(`card${i}`), spread[i]);
+      }
 
       const q = document.getElementById("q").value.trim();
       document.getElementById("stamp").textContent =
         (q ? `질문: ${q} · ` : "") + `뽑은 시간: ${stamp()}`;
-      document.getElementById("seedInfo").textContent = "※ 채널/시간과 무관하게 랜덤이야 😊";
+      document.getElementById("note").textContent = "※ 카드/시간과 무관하게 랜덤이야 😊";
     });
 
-    // Initial placeholder
-    render(POS.map((p, i)=>({pos:p, name:"(비어있음)", ori:""})));
-    document.querySelectorAll(".ori").forEach(o=>o.style.display="none");
+    renderEmpty();
   </script>
 </body>
 </html>
